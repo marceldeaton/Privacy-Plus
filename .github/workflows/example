@@ -1,0 +1,56 @@
+/**
+ * Example: Express integration using @privacyplus/sdk
+ *
+ * This example demonstrates how to instrument an Express server using the
+ * community SDK provided under lib/index.ts. It is safe, non-privileged, and
+ * suitable for local testing and CI.
+ */
+
+import express from 'express';
+import PrivacyPlusSDK from '../index';
+
+async function main() {
+  const sdk = new PrivacyPlusSDK({
+    apiKey: process.env.PRIVACYPLUS_API_KEY ?? null,
+    endpoint: process.env.PRIVACYPLUS_ENDPOINT ?? 'https://ingest.privacyplustech.com/ingest',
+    collect: {
+      enabledEvents: ['page_view', 'error'],
+      anonymizeIp: true,
+      localDP: { enabled: false }
+    },
+    transport: {
+      batchSize: 25,
+      uploadIntervalSeconds: 30
+    }
+  });
+
+  await sdk.init();
+
+  const app = express();
+
+  app.get('/', async (req, res) => {
+    await sdk.track('page_view', { path: req.path }, { source: 'example-express' });
+    res.send('Privacy+ SDK Express example');
+  });
+
+  app.get('/health', (_req, res) => {
+    res.status(200).send('ok');
+  });
+
+  app.use(async (err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+    await sdk.track('error', { message: err.message, stack: err.stack ?? '' }, { source: 'example-express' });
+    res.status(500).send('internal error');
+  });
+
+  const port = Number(process.env.PORT ?? 3000);
+  app.listen(port, () => {
+    // eslint-disable-next-line no-console
+    console.log(`Privacy+ example server listening on :${port}`);
+  });
+}
+
+main().catch((err) => {
+  // eslint-disable-next-line no-console
+  console.error('Example failed to start:', err);
+  process.exit(1);
+});
