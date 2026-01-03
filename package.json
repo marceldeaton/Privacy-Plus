@@ -1,9 +1,82 @@
 {
-  "name": "demo-repo",
-  "version": "0.2.0",
-  "description": "A sample package.json",
-  "dependencies": {
-    "@primer/css": "17.0.1"
+  "name": "@privacyplus/sdk",
+  "version": "1.0.0",
+  "description": "Privacy+ SDK — a privacy-first telemetry and system-insight SDK for Node.js (community components).",
+  "keywords": [
+    "privacy",
+    "telemetry",
+    "sdk",
+    "observability",
+    "differential-privacy",
+    "pseudonymization",
+    "telemetry-collector",
+    "privacy-preserving"
+  ],
+  "homepage": "https://github.com/privacyplus/privacyplus-sdk#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/privacyplus/privacyplus-sdk.git"
   },
-  "license": "MIT"
+  "bugs": {
+    "url": "https://github.com/privacyplus/privacyplus-sdk/issues"
+  },
+  "author": "Marcel Deaton <mdeaton11@liberty.edu> (Privacy Plus Technologies™)",
+  "contributors": [
+    {
+      "name": "Privacy Plus Technologies™",
+      "email": "enterprise@privacyplustech.com"
+    }
+  ],
+  "license": "GPL-3.0-or-later OR PrivacyPlusCommercial",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/",
+    "lib/",
+    "README.md",
+    "NOTICE.md",
+    "LICENSE*",
+    "docs/"
+  ],
+  "engines": {
+    "node": ">=16"
+  },
+  "scripts": {
+    "clean": "rimraf dist .cache",
+    "build": "tsc -p tsconfig.json",
+    "build:watch": "tsc -p tsconfig.json --watch",
+    "lint": "eslint 'lib/**/*.{ts,js}' --max-warnings=0",
+    "format": "prettier --write \"**/*.{ts,js,md,json,yml,yaml}\"",
+    "test": "jest --config jest.config.cjs --runInBand",
+    "test:watch": "jest --watch",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepublishOnly": "npm run build && npm run test && npm run lint",
+    "prepare": "npm run build",
+    "start:example": "node ./dist/examples/server.js",
+    "release": "semantic-release"
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "debug": "^4.3.4",
+    "uuid": "^9.0.0"
+  },
+  "peerDependencies": {},
+  "devDependencies": {
+    "@types/jest": "^29.5.2",
+    "@types/node": "^20.5.1",
+    "eslint": "^8.48.0",
+    "eslint-config-prettier": "^9.3.0",
+    "jest": "^29.6.1",
+    "prettier": "^2.9.0",
+    "rimraf": "^5.0.0",
+    "semantic-release": "^23.0.0",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "enginesStrict": true
 }
