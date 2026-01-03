@@ -1,0 +1,1 @@
+cat > .eslintrc.cjs <<'EOF' module.exports = { env: { node: true, es2021: true, jest: true }, parser: '@typescript-eslint/parser', plugins: ['@typescript-eslint'], extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier'], parserOptions: { ecmaVersion: 12, sourceType: 'module' }, rules: {} }; EOF
