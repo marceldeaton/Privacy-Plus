@@ -1,5 +1,4 @@
-Auto Assign
-Proof HTML
+
 # Privacy+ SDK — privacyplus-sdk
 
 Privacy+ SDK is a modular telemetry and system‑insight SDK that provides collectors, privacy-preserving processing primitives, and transport adapters for operational analytics and monitoring. This repository contains community components written for Node.js and TypeScript, example integrations, architecture documentation, and a controlled area for gated enterprise modules.
