@@ -1,56 +1,102 @@
 /**
- * Example: Express integration using @privacyplus/sdk
- *
- * This example demonstrates how to instrument an Express server using the
- * community SDK provided under lib/index.ts. It is safe, non-privileged, and
- * suitable for local testing and CI.
+ * Privacy+ SDK — Express middleware integration
+ * Centralized request + error instrumentation
  */
 
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import PrivacyPlusSDK from '../index';
 
-async function main() {
-  const sdk = new PrivacyPlusSDK({
-    apiKey: process.env.PRIVACYPLUS_API_KEY ?? null,
-    endpoint: process.env.PRIVACYPLUS_ENDPOINT ?? 'https://ingest.privacyplustech.com/ingest',
-    collect: {
-      enabledEvents: ['page_view', 'error'],
-      anonymizeIp: true,
-      localDP: { enabled: false }
-    },
-    transport: {
-      batchSize: 25,
-      uploadIntervalSeconds: 30
-    }
-  });
+const sdk = new PrivacyPlusSDK({
+  apiKey: process.env.PRIVACYPLUS_API_KEY ?? null,
+  endpoint:
+    process.env.PRIVACYPLUS_ENDPOINT ??
+    'https://ingest.privacyplustech.com/ingest',
+  collect: {
+    enabledEvents: ['request', 'error'],
+    anonymizeIp: true,
+    localDP: { enabled: false }
+  },
+  transport: {
+    batchSize: 50,
+    uploadIntervalSeconds: 20
+  }
+});
 
+/**
+ * Request instrumentation middleware
+ */
+function privacyPlusRequestMiddleware() {
+  return async (req: Request, _res: Response, next: NextFunction) => {
+    await sdk.track(
+      'request',
+      {
+        method: req.method,
+        path: req.path,
+        userAgent: req.headers['user-agent'] ?? null
+      },
+      { source: 'express-middleware' }
+    );
+    next();
+  };
+}
+
+/**
+ * Error instrumentation middleware
+ * MUST be registered last
+ */
+function privacyPlusErrorMiddleware() {
+  return async (
+    err: Error,
+    _req: Request,
+    res: Response,
+    _next: NextFunction
+  ) => {
+    await sdk.track(
+      'error',
+      {
+        message: err.message,
+        stack: err.stack ?? ''
+      },
+      { source: 'express-middleware' }
+    );
+
+    res.status(500).send('internal error');
+  };
+}
+
+async function main(): Promise<void> {
   await sdk.init();
 
   const app = express();
 
-  app.get('/', async (req, res) => {
-    await sdk.track('page_view', { path: req.path }, { source: 'example-express' });
-    res.send('Privacy+ SDK Express example');
+  app.use(privacyPlusRequestMiddleware());
+
+  app.get('/', (_req, res) => {
+    res.send('Privacy+ middleware example');
   });
 
   app.get('/health', (_req, res) => {
     res.status(200).send('ok');
   });
 
-  app.use(async (err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-    await sdk.track('error', { message: err.message, stack: err.stack ?? '' }, { source: 'example-express' });
-    res.status(500).send('internal error');
-  });
+  app.use(privacyPlusErrorMiddleware());
 
   const port = Number(process.env.PORT ?? 3000);
-  app.listen(port, () => {
-    // eslint-disable-next-line no-console
-    console.log(`Privacy+ example server listening on :${port}`);
+  const server = app.listen(port, () => {
+    console.log(`Privacy+ middleware server listening on :${port}`);
   });
+
+  const shutdown = async () => {
+    await sdk.flush?.();
+    await sdk.shutdown?.();
+    server.close(() => process.exit(0));
+  };
+
+  process.on('SIGINT', shutdown);
+  process.on('SIGTERM', shutdown);
 }
 
 main().catch((err) => {
-  // eslint-disable-next-line no-console
-  console.error('Example failed to start:', err);
+  console.error('Startup failure:', err);
   process.exit(1);
 });
