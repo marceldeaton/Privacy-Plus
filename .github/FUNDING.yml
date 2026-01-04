@@ -1,0 +1,24 @@
+# FUNDING.yml
+# Supported funding platforms for Privacy+ Technologies™
+
+
+github:
+  - privacyplus
+  - privacyplustech
+
+patreon: privacyplus
+open_collective: privacyplus
+ko_fi: privacyplus
+tidelift: npm/privacyplus-sdk
+community_bridge: privacyplus
+liberapay: privacyplus
+issuehunt: privacyplus
+lfx_crowdfunding: privacyplus
+polar: privacyplus
+buy_me_a_coffee: privacyplus
+thanks_dev: privacyplus
+
+custom:
+  - https://privacyplustech.com/enterprise
+  - mailto:mdeaton11@liberty.edu
+```*
