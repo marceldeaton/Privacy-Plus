@@ -54,7 +54,7 @@ Release
 
 Please see the docs/ directory for architecture details and API references.
 
-# Privacy+ Technologies™ | Proprietary Software License and Copyright Notice
+# Privacy+ Technologies™ | Copyright Notice
 
 ---
 
@@ -62,4 +62,4 @@ Please see the docs/ directory for architecture details and API references.
 
 © 2026 Privacy+ Technologies, operating as Privacy Plus Technologies™. All rights reserved.
 
-The software provided by Privacy Plus Technologies™ is licensed under the [GNU General Public License v3.0 (GPL-3.0)](https://www.gnu.org/licenses/gpl-3.0.html). This notice does not grant permission beyond the terms of the GPL-3.0. "Privacy Plus Technologies" and the Privacy Plus Technologies™ logo are trademarks of Privacy+ Technologies. All other trademarks are property of their respective owners.
+The software provided by Privacy Plus Technologies™ is licensed "Privacy Plus Technologies" and the Privacy Plus Technologies™ logo are trademarks of Privacy+ Technologies. All other trademarks are property of their respective owners.
