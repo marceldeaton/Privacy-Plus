@@ -1,6 +1,4 @@
-Privacy+ SDK (privacyplus-sdk)
-
-Privacy+ Technologies™ — Proprietary kernel-level software for hardware and firmware security integration.
+Privacy+ SDK — Proprietary kernel-level SDK for secure hardware and firmware integration, developed by Privacy+ Technologies™.
 
 The Privacy+ SDK is a modular telemetry and system-insight SDK providing collectors, privacy-preserving processing primitives, and transport adapters for operational analytics and monitoring.
 
